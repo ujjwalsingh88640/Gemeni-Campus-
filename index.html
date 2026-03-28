@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusConnect | Anonymous Campus Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="glass-nav">
+        <div class="nav-content">
+            <div class="logo" id="go-home">
+                <i class="ph-fill ph-student"></i>
+                <span>CampusConnect</span>
+            </div>
+            <div class="nav-links" id="nav-dynamic-title">Home</div>
+        </div>
+    </nav>
+
+    <main class="app-container">
+        
+        <section id="home-view" class="view active">
+            <header class="home-header">
+                <h1>What's on your mind?</h1>
+                <p>Post anonymously. Connect globally. Real-time campus network.</p>
+            </header>
+            
+            <div class="category-grid">
+                <div class="category-card" data-collection="academics_posts">
+                    <div class="card-icon"><i class="ph ph-books"></i></div>
+                    <h3>Academics</h3>
+                    <p>Post doubts & get solutions</p>
+                </div>
+                <div class="category-card" data-collection="confessions_posts">
+                    <div class="card-icon"><i class="ph ph-mask-happy"></i></div>
+                    <h3>Confessions</h3>
+                    <p>Completely anonymous</p>
+                </div>
+                <div class="category-card" data-collection="lostfound_posts">
+                    <div class="card-icon"><i class="ph ph-magnifying-glass"></i></div>
+                    <h3>Lost & Found</h3>
+                    <p>Report items to the campus</p>
+                </div>
+                <div class="category-card" data-collection="campusbuzz_posts">
+                    <div class="card-icon"><i class="ph ph-megaphone"></i></div>
+                    <h3>Campus Buzz</h3>
+                    <p>Memes, updates & opinions</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="feed-view" class="view">
+            <button class="back-btn" id="back-btn"><i class="ph ph-arrow-left"></i> Back to Categories</button>
+            <div id="feed-container" class="feed-container">
+                </div>
+        </section>
+
+    </main>
+
+    <button id="fab" class="fab hidden"><i class="ph ph-plus"></i></button>
+
+    <div id="post-modal" class="modal-overlay">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2>Create Post</h2>
+                <button id="close-modal"><i class="ph ph-x"></i></button>
+            </div>
+            <form id="post-form">
+                <input type="text" id="post-name" placeholder="Your Name (Optional - Default: Anonymous)" autocomplete="off">
+                <div id="dynamic-fields"></div>
+                <textarea id="post-text" placeholder="What do you want to share?" required rows="4"></textarea>
+                
+                <div class="media-upload">
+                    <label for="post-image" class="upload-btn">
+                        <i class="ph ph-image"></i> Add Image
+                    </label>
+                    <input type="file" id="post-image" accept="image/*" hidden>
+                </div>
+                <img id="image-preview" class="image-preview hidden" alt="Preview">
+                
+                <button type="submit" class="submit-btn" id="submit-post-btn">Post to Campus</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
