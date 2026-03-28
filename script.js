@@ -7,12 +7,16 @@ import {
 // 🚨 FIREBASE CONFIGURATION (PASTE YOURS HERE)
 // ==========================================
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCkvc5FhBhKfUJL3ZbGi4ds3lVDWDduKcs",
+  authDomain: "campus1-87cdc.firebaseapp.com",
+  projectId: "campus1-87cdc",
+  storageBucket: "campus1-87cdc.firebasestorage.app",
+  messagingSenderId: "428407156924",
+  appId: "1:428407156924:web:814d7c832089b33e43e0b9",
+  measurementId: "G-MM1QZ3RNS1"
+};
 };
 
 const app = initializeApp(firebaseConfig);
