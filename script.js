@@ -4,7 +4,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // ==========================================
-// 🚨 FIREBASE CONFIGURATION
+// 🚨 FIREBASE CONFIGURATIOn
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyCkvc5FhBhKfUJL3ZbGi4ds3lVDWDduKcs",
