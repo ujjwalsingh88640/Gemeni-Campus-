@@ -4,10 +4,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // ==========================================
-// 🚨 FIREBASE CONFIGURATION (PASTE YOURS HERE)
+// 🚨 FIREBASE CONFIGURATION
 // ==========================================
-const firebaseConfig = {
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCkvc5FhBhKfUJL3ZbGi4ds3lVDWDduKcs",
   authDomain: "campus1-87cdc.firebaseapp.com",
@@ -17,7 +15,6 @@ const firebaseConfig = {
   appId: "1:428407156924:web:814d7c832089b33e43e0b9",
   measurementId: "G-MM1QZ3RNS1"
 };
-};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -26,8 +23,8 @@ const db = getFirestore(app);
 // APP STATE & DOM ELEMENTS
 // ==========================================
 let currentCollection = null;
-let postsUnsubscribe = null; // To clear listeners when changing tabs
-const activeCommentListeners = {}; // Track active comment listeners
+let postsUnsubscribe = null; 
+const activeCommentListeners = {}; 
 
 const views = {
     home: document.getElementById('home-view'),
@@ -58,7 +55,6 @@ document.querySelectorAll('.category-card').forEach(card => {
         currentCollection = card.dataset.collection;
         const title = card.querySelector('h3').innerText;
         
-        // Update UI
         views.home.classList.remove('active');
         views.feed.classList.add('active');
         elements.fab.classList.remove('hidden');
@@ -76,7 +72,6 @@ const goHome = () => {
     elements.fab.classList.add('hidden');
     elements.navTitle.innerText = "Home";
     
-    // Cleanup listeners
     if(postsUnsubscribe) postsUnsubscribe();
     Object.values(activeCommentListeners).forEach(unsub => unsub());
 };
@@ -98,7 +93,6 @@ elements.closeModal.addEventListener('click', () => {
     uploadedImageBase64 = null;
 });
 
-// If Lost & Found, add extra fields dynamically
 function setupDynamicForm(collectionName) {
     elements.dynamicFields.innerHTML = '';
     if (collectionName === 'lostfound_posts') {
@@ -109,7 +103,6 @@ function setupDynamicForm(collectionName) {
     }
 }
 
-// Image Handling & Compression (Canvas prevents Firestore 1MB doc limit crash)
 elements.imageInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if(!file) return;
@@ -128,7 +121,7 @@ elements.imageInput.addEventListener('change', (e) => {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             
-            uploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7); // Compress to 70% quality
+            uploadedImageBase64 = canvas.toDataURL('image/jpeg', 0.7); 
             elements.imagePreview.src = uploadedImageBase64;
             elements.imagePreview.classList.remove('hidden');
         }
@@ -136,7 +129,6 @@ elements.imageInput.addEventListener('change', (e) => {
     reader.readAsDataURL(file);
 });
 
-// Submit Post
 elements.postForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('submit-post-btn');
@@ -153,7 +145,6 @@ elements.postForm.addEventListener('submit', async (e) => {
         timestamp: serverTimestamp()
     };
 
-    // Append Lost & Found specific data
     if (currentCollection === 'lostfound_posts') {
         postData.lfItem = document.getElementById('lf-item').value.trim();
         postData.lfLocation = document.getElementById('lf-location').value.trim();
@@ -162,7 +153,7 @@ elements.postForm.addEventListener('submit', async (e) => {
     try {
         await addDoc(collection(db, currentCollection), postData);
         showToast("Post shared with campus!");
-        elements.closeModal.click(); // Uses the click handler to clear everything
+        elements.closeModal.click(); 
     } catch (error) {
         console.error("Error adding post: ", error);
         showToast("Error posting. Check console.");
@@ -180,7 +171,7 @@ function loadPosts(collectionName) {
     
     const q = query(collection(db, collectionName), orderBy("timestamp", "desc"));
     
-    if(postsUnsubscribe) postsUnsubscribe(); // Detach old listener
+    if(postsUnsubscribe) postsUnsubscribe(); 
 
     postsUnsubscribe = onSnapshot(q, (snapshot) => {
         if (snapshot.empty) {
@@ -188,7 +179,7 @@ function loadPosts(collectionName) {
             return;
         }
 
-        elements.feedContainer.innerHTML = ''; // Clear loading/empty state
+        elements.feedContainer.innerHTML = ''; 
 
         snapshot.forEach((docSnap) => {
             const post = docSnap.data();
@@ -198,7 +189,6 @@ function loadPosts(collectionName) {
             const postEl = document.createElement('div');
             postEl.className = 'post-card glass-panel';
             
-            // Build Lost & Found Tag if applicable
             let lfTag = '';
             if (post.lfItem) {
                 lfTag = `<div class="lf-badge">Item: ${post.lfItem} | Location: ${post.lfLocation}</div>`;
@@ -230,7 +220,6 @@ function loadPosts(collectionName) {
 
             elements.feedContainer.appendChild(postEl);
 
-            // Handle Comment Toggle
             postEl.querySelector('.toggle-comments').addEventListener('click', () => {
                 const commentBox = document.getElementById(`comments-${postId}`);
                 commentBox.classList.toggle('active');
@@ -239,16 +228,15 @@ function loadPosts(collectionName) {
                 }
             });
 
-            // Handle Comment Submit
             postEl.querySelector(`#comment-form-${postId}`).addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const inputEl = e.target.querySelector('input');
                 const commentText = inputEl.value.trim();
-                inputEl.value = ''; // clear input
+                inputEl.value = ''; 
                 
                 try {
                     await addDoc(collection(db, `${collectionName}/${postId}/comments`), {
-                        name: "Anonymous", // Kept simple, can prompt for name if needed
+                        name: "Anonymous", 
                         text: commentText,
                         timestamp: serverTimestamp()
                     });
@@ -257,6 +245,8 @@ function loadPosts(collectionName) {
                 }
             });
         });
+    }, (error) => {
+        console.error("Firebase Snapshot Error:", error);
     });
 }
 
@@ -266,13 +256,12 @@ function loadPosts(collectionName) {
 function loadComments(postId, collectionName) {
     const commentsList = document.getElementById(`comments-list-${postId}`);
     
-    // Prevent multiple listeners for the same post
     if (activeCommentListeners[postId]) return; 
 
     const q = query(collection(db, `${collectionName}/${postId}/comments`), orderBy("timestamp", "asc"));
     
     activeCommentListeners[postId] = onSnapshot(q, (snapshot) => {
-        commentsList.innerHTML = ''; // Clear and rebuild
+        commentsList.innerHTML = ''; 
         
         if (snapshot.empty) {
             commentsList.innerHTML = `<div class="post-time" style="text-align:center; margin-bottom: 1rem;">No comments yet.</div>`;
